@@ -9,7 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.102.0",
     "cloudinary": "^2.10.0",
+    "groq-sdk": "^1.2.1",
     "mongoose": "^9.6.3",
     "next": "16.2.7",
     "next-auth": "^4.24.14",

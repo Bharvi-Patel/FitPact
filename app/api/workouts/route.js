@@ -1,9 +1,11 @@
 import { connectDB } from "@/lib/mongodb";
 import Workout from "@/models/Workout";
 import User from "@/models/User";
+import { authOptions } from "@/lib/authOptions"
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
+import { getPointsForAction } from "@/lib/ranks"
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -50,6 +52,13 @@ export async function POST(request) {
             })
             if (existingWorkout) return NextResponse.json({ error: "Already logged today!" }, { status: 400 })
 
+                // Check if first to log in pact today
+            const pactWorkoutToday = await Workout.findOne({
+                pact: user.pact,
+                date: { $gte: today }
+            })
+            const isFirstToLog = !pactWorkoutToday
+
             // Save workout to MongoDB
             const workout = await Workout.create({
             user: user._id,
@@ -59,9 +68,8 @@ export async function POST(request) {
             })
 
             // Update streak logic
-            const yesterday = new Date()
-            yesterday.setDate(yesterday.getDate() - 1)
-            yesterday.setHours(0, 0, 0, 0)
+            const yesterday = new Date(today)
+            yesterday.setUTCDate(yesterday.getUTCDate() - 1)
 
 
             const yesterdayWorkout = await Workout.findOne({
@@ -88,6 +96,11 @@ export async function POST(request) {
                 newStreak = 0
             }
             }
+
+            // Bonus points
+            if (newStreak === 7) pointsEarned += getPointsForAction("SEVEN_DAY_STREAK")
+            if (isFirstToLog) pointsEarned += getPointsForAction("FIRST_TO_LOG")
+
 
             // Update user
             await User.findByIdAndUpdate(user._id, {

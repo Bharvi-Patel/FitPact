@@ -116,6 +116,49 @@ export default function Dashboard() {
             </div>
           )}
         </div>
+
+        {/* Points */}
+        <div className="mt-6 bg-gray-900 rounded-2xl p-6 border border-gray-800">
+          <p className="text-gray-400 text-sm">Your Points</p>
+          <p className="text-4xl font-bold text-yellow-400 mt-1">{session.user.points} pts 🏆</p>
+        </div>
+
+        {/* Workout + Diet Plan */}
+        {session.user.workoutPlan ? (
+          <div className="mt-6 grid grid-cols-1 gap-6">
+            <div className="bg-gray-900 rounded-2xl p-6 border border-gray-800">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-white font-bold text-lg">Your Workout Plan 💪</p>
+                <span className="text-green-400 text-sm">{session.user.goals?.join(", ")}</span>
+              </div>
+              <pre className="text-gray-300 text-sm whitespace-pre-wrap font-sans leading-relaxed">
+                {session.user.workoutPlan}
+              </pre>
+            </div>
+            <div className="bg-gray-900 rounded-2xl p-6 border border-gray-800">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-white font-bold text-lg">Your Diet Plan 🥗</p>
+                <span className="text-green-400 text-sm">{session.user.dietPreference}</span>
+              </div>
+              <pre className="text-gray-300 text-sm whitespace-pre-wrap font-sans leading-relaxed">
+                {session.user.dietPlan}
+              </pre>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-6 bg-gray-900 rounded-2xl p-6 border border-gray-800 flex items-center justify-between">
+            <div>
+              <p className="text-white font-bold">No plan yet</p>
+              <p className="text-gray-400 text-sm mt-1">Set up your profile to get a personalized plan</p>
+            </div>
+            <button
+              onClick={() => router.push("/onboarding")}
+              className="bg-green-400 text-black font-bold px-4 py-2 rounded-full hover:bg-green-300 transition text-sm"
+            >
+              Get My Plan 🤖
+            </button>
+          </div>
+        )}
       </div>
     </main>
   )
