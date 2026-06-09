@@ -5,23 +5,23 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
 export default function LogWorkout() {
-    const { data: session, status } = useSession()
-    const router = useRouter()
-    const [photo, setPhoto] = useState(null)
-    const [preview, setPreview] = useState(null)
-    const [note, setNote] = useState("")
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState("")    
+  const { data: session, status, update } = useSession()
+  const router = useRouter()
+  const [photo, setPhoto] = useState(null)
+  const [preview, setPreview] = useState(null)
+  const [note, setNote] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
-    function handlePhotoChange(e) {
-        const file = e.target.files[0]
-        if(!file) return
-        setPhoto(file)
-        setPreview(URL.createObjectURL(file))
-    }
+  function handlePhotoChange(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    setPhoto(file)
+    setPreview(URL.createObjectURL(file))
+  }
 
-    async function handleSubmit() {
-    if (!photo) return setError("Upload a photo as proof! 📸")
+  async function handleSubmit() {
+    if (!photo) return setError("Upload a photo as proof!")
     setLoading(true)
     setError("")
 
@@ -37,6 +37,7 @@ export default function LogWorkout() {
       const data = await res.json()
       if (data.error) return setError(data.error)
 
+      await update()
       router.push("/dashboard")
     } catch (err) {
       setError("Something went wrong!")
@@ -57,7 +58,7 @@ export default function LogWorkout() {
     <main className="min-h-screen bg-black pt-24 px-6 flex items-center justify-center">
       <div className="w-full max-w-md">
         <h1 className="text-3xl font-bold text-white text-center mb-2">
-          Log <span className="text-green-400">Workout</span> 
+          Log <span className="text-green-400">Workout</span>
         </h1>
         <p className="text-gray-400 text-center mb-8">
           Show your pact you showed up!
@@ -71,10 +72,13 @@ export default function LogWorkout() {
           {preview ? (
             <img src={preview} alt="preview" className="w-full h-full object-cover rounded-2xl" />
           ) : (
-            <div className="text-center">
-              <p className="text-4xl mb-2">📸</p>
+            <div className="text-center flex flex-col items-center gap-3">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-600">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
               <p className="text-gray-400">Tap to upload workout photo</p>
-              <p className="text-gray-600 text-sm mt-1">JPG, PNG supported</p>
+              <p className="text-gray-600 text-sm">JPG, PNG supported</p>
             </div>
           )}
         </div>
@@ -89,7 +93,7 @@ export default function LogWorkout() {
         {/* Note */}
         <div className="mt-4">
           <textarea
-            placeholder="Add a note... (optional) e.g. Chest day done 🏋️"
+            placeholder="Add a note... (optional) e.g. Chest day done"
             value={note}
             onChange={(e) => setNote(e.target.value)}
             rows={3}
@@ -97,12 +101,10 @@ export default function LogWorkout() {
           />
         </div>
 
-        {/* Error */}
         {error && (
           <p className="text-red-400 text-sm text-center mt-3">{error}</p>
         )}
 
-        {/* Submit */}
         <button
           onClick={handleSubmit}
           disabled={loading}
