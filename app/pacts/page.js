@@ -100,7 +100,7 @@ export default function Pacts() {
               <label className="text-gray-400 text-sm mb-1 block">Pact Name</label>
               <input
                 type="text"
-                placeholder="e.g. Scouts 💪"
+                placeholder="e.g. Scouts "
                 value={pactName}
                 onChange={(e) => setPactName(e.target.value)}
                 className="w-full bg-black border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-green-400"

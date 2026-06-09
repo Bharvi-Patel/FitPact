@@ -1,11 +1,12 @@
 "use client"
 
+
 import { useState } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
 export default function Onboarding() {
-  const { data: session } = useSession()
+  const { data: session, update } = useSession()
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
@@ -47,6 +48,8 @@ export default function Onboarding() {
       })
       const data = await res.json()
       if (data.error) return setError(data.error)
+        
+      await update()
       router.push("/dashboard")
     } catch (err) {
       setError("Something went wrong!")

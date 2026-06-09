@@ -29,6 +29,13 @@ export default function Dashboard() {
         }
       }, [status])
 
+       // Redirect to onboarding if not onboarded yet
+      useEffect(() => {
+        if (status === "authenticated" && session?.user?.onboarded === false) {
+          router.push("/onboarding")
+        }
+      }, [status, session])
+
     if (status === "loading") {
       return (
         <main className="min-h-screen bg-black flex items-center justify-center">
@@ -45,6 +52,8 @@ export default function Dashboard() {
       )
     }
 
+   
+
   return (
     <main className="min-h-screen bg-black pt-24 px-6">
         <div className="max-w-4xl mx-auto">
@@ -59,7 +68,7 @@ export default function Dashboard() {
           <div className="bg-gray-900 rounded-2xl p-6 border border-gray-800">
             <p className="text-gray-400 text-sm">Current Streak</p>
             <p className="text-4xl font-bold text-green-400 mt-1">
-              {session.user.streak} 🔥
+              {session.user.streak} 
             </p>
           </div>
           <div className="bg-gray-900 rounded-2xl p-6 border border-gray-800">
@@ -71,7 +80,7 @@ export default function Dashboard() {
           <div className="bg-gray-900 rounded-2xl p-6 border border-gray-800">
             <p className="text-gray-400 text-sm">Strikes</p>
             <p className="text-4xl font-bold text-red-400 mt-1">
-              {session.user.strikes} ⚡
+              {session.user.strikes} 
             </p>
           </div>
         </div>
@@ -110,7 +119,10 @@ export default function Dashboard() {
           ) : (
             <div className="flex items-center justify-between mt-2">
               <p className="text-gray-500">You are not in a pact yet.</p>
-              <button className="bg-green-400 text-black font-bold px-4 py-2 rounded-full hover:bg-green-300 transition">
+              <button
+                onClick={() => router.push("/pacts")}
+                className="bg-green-400 text-black font-bold px-4 py-2 rounded-full hover:bg-green-300 transition"
+              >
                 Join or Create a Pact
               </button>
             </div>
@@ -120,7 +132,7 @@ export default function Dashboard() {
         {/* Points */}
         <div className="mt-6 bg-gray-900 rounded-2xl p-6 border border-gray-800">
           <p className="text-gray-400 text-sm">Your Points</p>
-          <p className="text-4xl font-bold text-yellow-400 mt-1">{session.user.points} pts 🏆</p>
+          <p className="text-4xl font-bold text-yellow-400 mt-1">{session.user.points} pts </p>
         </div>
 
         {/* Workout + Diet Plan */}
@@ -128,22 +140,15 @@ export default function Dashboard() {
           <div className="mt-6 grid grid-cols-1 gap-6">
             <div className="bg-gray-900 rounded-2xl p-6 border border-gray-800">
               <div className="flex items-center justify-between mb-4">
-                <p className="text-white font-bold text-lg">Your Workout Plan 💪</p>
+                <p className="text-white font-bold text-lg">Your Workout Plan </p>
                 <span className="text-green-400 text-sm">{session.user.goals?.join(", ")}</span>
               </div>
               <pre className="text-gray-300 text-sm whitespace-pre-wrap font-sans leading-relaxed">
                 {session.user.workoutPlan}
               </pre>
             </div>
-            <div className="bg-gray-900 rounded-2xl p-6 border border-gray-800">
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-white font-bold text-lg">Your Diet Plan 🥗</p>
-                <span className="text-green-400 text-sm">{session.user.dietPreference}</span>
-              </div>
-              <pre className="text-gray-300 text-sm whitespace-pre-wrap font-sans leading-relaxed">
-                {session.user.dietPlan}
-              </pre>
-            </div>
+            
+    
           </div>
         ) : (
           <div className="mt-6 bg-gray-900 rounded-2xl p-6 border border-gray-800 flex items-center justify-between">
@@ -155,7 +160,7 @@ export default function Dashboard() {
               onClick={() => router.push("/onboarding")}
               className="bg-green-400 text-black font-bold px-4 py-2 rounded-full hover:bg-green-300 transition text-sm"
             >
-              Get My Plan 🤖
+              Get My Plan 
             </button>
           </div>
         )}

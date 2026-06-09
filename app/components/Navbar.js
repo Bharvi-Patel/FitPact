@@ -111,20 +111,20 @@ export default function Navbar() {
             <img
               src={session.user.image}
               alt="profile"
-              className="w-8 h-8 rounded-full cursor-pointer"
-              onClick={() => signOut()}
+              className="w-8 h-8 rounded-full cursor-pointer hover:opacity-80 transition"
+              onClick={() => router.push("/profile")}
             />
           </>
         ) : (
           <>
             <button
-              onClick={() => signIn("google")}
+              onClick={() => router.push("/login")}
               className="text-gray-400 hover:text-white transition"
             >
               Login
             </button>
             <button
-              onClick={() => signIn("google")}
+              onClick={() => router.push("/login")}
               className="bg-green-400 text-black font-bold px-4 py-2 rounded-full hover:bg-green-300 transition"
             >
               Sign Up
