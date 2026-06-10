@@ -1,11 +1,11 @@
 import Navbar from "./components/Navbar"
-import "./globals.css"
 import Providers from "./components/Providers"
+import "./globals.css"
 
-export default function RootLayout({children}){
+export default function RootLayout({ children }) {
   return (
-    <html lang = "en">
-      <body className="bg-black"> 
+    <html lang="en">
+      <body>
         <Providers>
           <Navbar />
           {children}
